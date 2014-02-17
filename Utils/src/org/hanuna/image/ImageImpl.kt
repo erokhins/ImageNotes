@@ -25,7 +25,7 @@ class PixelArrayAsImage(val bufferedImage: BufferedImage): MutableImage {
 
 
     override fun get(col: Int, row: Int): Pixel {
-        val startIndex = startIndex(col, row)
+        val startIndex = startIndex(fixCol(col), fixRow(row))
         val pixels = pixels
         val hasAlphaChannel = hasAlphaChannel
         return object : Pixel {
@@ -37,6 +37,8 @@ class PixelArrayAsImage(val bufferedImage: BufferedImage): MutableImage {
     }
 
     override fun set(col: Int, row: Int, value: Pixel) {
+        if (outCol(col) || outRow(row)) return
+
         val startIndex = startIndex(col, row)
         pixels[startIndex] = value.b.toByte()
         pixels[startIndex + 1] = value.g.toByte()
@@ -48,6 +50,29 @@ class PixelArrayAsImage(val bufferedImage: BufferedImage): MutableImage {
 
     override fun toBufferedImage(): BufferedImage {
         return bufferedImage
+    }
+
+    private fun outCol(col: Int) = (col < 0) || (col >= width)
+    private fun outRow(row: Int) = (row < 0) || (row >= height)
+
+    private fun fixCol(col: Int): Int {
+        return if (col < 0){
+            - col
+        } else if (col >= width) {
+            2 * width - col - 1
+        } else {
+            col
+        }
+    }
+
+    private fun fixRow(row: Int): Int {
+        return if (row < 0){
+            -row
+        } else if (row >= height) {
+            2 * height - row - 1
+        } else {
+            row
+        }
     }
 
 }
