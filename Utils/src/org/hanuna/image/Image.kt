@@ -25,13 +25,20 @@ trait MutableImage : Image {
 }
 
 fun MutableImage.forAllPixels(operation: (Pixel) -> Pixel) {
-    for (col in 0..width - 1) {
-        for (row in 0..height - 1) {
+    for (row in 0..height - 1) {
+        for (col in 0..width - 1) {
             this[col, row] = operation(this[col, row])
         }
     }
 }
 
+
+fun toPixel(r: Int = 0, g: Int = 0, b: Int = 0, alpha: Int = 255): Pixel = object: Pixel {
+    override val r: Int = r
+    override val g: Int = g
+    override val b: Int = b
+    override val alpha: Int = alpha
+}
 
 fun Pixel.onlyRed(): Pixel = object: Pixel {
     override val r: Int = this@onlyRed.r

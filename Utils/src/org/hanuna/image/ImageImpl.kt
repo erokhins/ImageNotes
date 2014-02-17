@@ -7,8 +7,8 @@ fun BufferedImage.toMutableImage(): MutableImage = PixelArrayAsImage(this)
 
 fun Byte.to255Int(): Int = this.toInt() and 0xff
 
-class PixelArrayAsImage(bufferedImage: BufferedImage): MutableImage {
-    private val hasAlphaChannel = bufferedImage.getAlphaRaster() != null
+class PixelArrayAsImage(val bufferedImage: BufferedImage): MutableImage {
+    val hasAlphaChannel = bufferedImage.getAlphaRaster() != null
     private val pixels = (bufferedImage.getRaster()!!.getDataBuffer() as DataBufferByte).getData()!!;
 
     override val width: Int = bufferedImage.getWidth()
@@ -47,11 +47,7 @@ class PixelArrayAsImage(bufferedImage: BufferedImage): MutableImage {
     }
 
     override fun toBufferedImage(): BufferedImage {
-        val imgType = if (hasAlphaChannel) BufferedImage.TYPE_4BYTE_ABGR else BufferedImage.TYPE_3BYTE_BGR
-        val image = BufferedImage(width, height, imgType)
-        val imagePixels = (image.getRaster()!!.getDataBuffer() as DataBufferByte).getData()!!;
-        System.arraycopy(pixels, 0, imagePixels, 0, pixels.size)
-        return image
+        return bufferedImage
     }
 
 }

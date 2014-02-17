@@ -16,6 +16,12 @@ fun Image.writeImageToFile(filename: String, quality : Float = 0.9f) {
     writeJpeg(toBufferedImage(), filename, quality)
 }
 
+fun Image.newEmptyImage(withAlphaChannel: Boolean = false): MutableImage {
+    val imageType = if (withAlphaChannel) BufferedImage.TYPE_4BYTE_ABGR else BufferedImage.TYPE_3BYTE_BGR
+    val bufferedImage = BufferedImage(width, height, imageType)
+    return bufferedImage.toMutableImage()
+}
+
 private fun writeJpeg(image : BufferedImage, destFile : String, quality : Float) {
     val writer = ImageIO.getImageWritersByFormatName("jpeg").next()
     val param = writer.getDefaultWriteParam()
