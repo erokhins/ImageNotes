@@ -24,12 +24,20 @@ trait MutableImage : Image {
     fun set(col: Int, row: Int, value: Pixel)
 }
 
-fun MutableImage.forAllPixels(operation: (Pixel) -> Pixel) {
+class PixelWithCoordinates(pixel: Pixel, val col: Int, val row: Int) : Pixel by pixel
+
+fun MutableImage.forAllPixels(operation: (PixelWithCoordinates) -> Pixel) {
     for (row in 0..height - 1) {
         for (col in 0..width - 1) {
-            this[col, row] = operation(this[col, row])
+            this[col, row] = operation(PixelWithCoordinates(this[col, row], col, row))
         }
     }
+}
+
+fun Image.toNewImage(draw: (original: Image, empty: MutableImage) -> Unit): MutableImage {
+    val newImage = newEmptyImage()
+    draw(this, newImage)
+    return newImage
 }
 
 
@@ -39,6 +47,16 @@ fun toPixel(r: Int = 0, g: Int = 0, b: Int = 0, alpha: Int = 255): Pixel = objec
     override val b: Int = b
     override val alpha: Int = alpha
 }
+
+object StandardPixels {
+    val BLACK = toPixel()
+    val GRAY = toPixel(128, 128, 128)
+    val WHITE = toPixel(255, 255, 255)
+    val RED = toPixel(255)
+    val GREEN = toPixel(0, 255)
+    val BLUE = toPixel(0, 0, 255)
+}
+
 
 fun Pixel.onlyRed(): Pixel = object: Pixel {
     override val r: Int = this@onlyRed.r

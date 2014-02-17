@@ -1,22 +1,29 @@
 package org.hanuna.test
 
 import org.hanuna.image.*
+import org.hanuna.image.monochrome.toMonochrome
 
 fun main(args: Array<String>) {
-    val img = "3"
     val timer = Timer()
 
-    val image = readImageFile("img/${img}.jpg").newEmptyImage()
+    for (img in 2..9) {
+        run("$img")
+    }
+
+    timer.all()
+}
+
+fun run(img: String) {
+    println("Start Image: $img.")
+    val timer = Timer()
+
+    val image = readImageFile("img/${img}.jpg")
     timer.endPart("read image")
 
-    var c = 0
-    image.forAllPixels {
-        c++
-        toPixel(c % 255)
-    }
-    timer.endPart("toRed")
+    val monochrome = image.toMonochrome()
+    timer.endPart("toMonochrome")
 
-    image.writeImageToFile("img/${img}_out.jpg")
+    monochrome.writeImageToFile("img/${img}_out.jpg", 0.99f)
     timer.endPart("write to file")
 
     timer.all()

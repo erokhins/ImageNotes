@@ -12,5 +12,6 @@ class Timer() {
     public fun all() {
         val end = System.currentTimeMillis()
         println("All: ${end - start} ms")
+        println()
     }
 }
