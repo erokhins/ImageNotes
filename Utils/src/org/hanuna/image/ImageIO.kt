@@ -12,8 +12,12 @@ fun readImageFile(filename: String): MutableImage {
     return bufferedImage.toMutableImage()
 }
 
-fun Image.writeImageToFile(filename: String, quality : Float = 0.9f) {
+fun Image.writeImageToJpg(filename: String, quality : Float = 0.9f) {
     writeJpeg(toBufferedImage(), filename, quality)
+}
+
+fun Image.writeImageToPng(filename: String) {
+    ImageIO.write(toBufferedImage(), "PNG", File(filename));
 }
 
 fun Image.newEmptyImage(withAlphaChannel: Boolean = false): MutableImage {
