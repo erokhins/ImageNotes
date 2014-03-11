@@ -11,6 +11,8 @@ trait Pixel {
     val alpha: Int
 }
 
+fun Pixel.equals(other : Pixel) = other.r == this.r && other.g == this.g && other.b == this.b // alpha
+
 trait Image {
     val width: Int  // count of columns
     val height: Int // count of rows
@@ -26,10 +28,10 @@ trait MutableImage : Image {
 
 class PixelWithCoordinates(pixel: Pixel, val col: Int, val row: Int) : Pixel by pixel
 
-fun MutableImage.forAllPixels(operation: (PixelWithCoordinates) -> Pixel) {
+fun Image.forAllPixels(operation: (PixelWithCoordinates) -> Unit) {
     for (row in 0..height - 1) {
         for (col in 0..width - 1) {
-            this[col, row] = operation(PixelWithCoordinates(this[col, row], col, row))
+            operation(PixelWithCoordinates(this[col, row], col, row))
         }
     }
 }
@@ -56,6 +58,9 @@ object StandardPixels {
     val GREEN = toPixel(0, 255)
     val BLUE = toPixel(0, 0, 255)
 }
+
+fun randByte(): Int = Math.round(Math.random() * 255).toInt();
+fun randomPixel(): Pixel = toPixel(randByte(), randByte(), randByte())
 
 
 fun Pixel.onlyRed(): Pixel = object: Pixel {
