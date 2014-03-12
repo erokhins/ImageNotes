@@ -6,6 +6,7 @@ import org.hanuna.image.monochrome.colorer
 import org.hanuna.image.monochrome.printMiddle
 import org.hanuna.image.monochrome.printStrangePixels
 import org.hanuna.image.monochrome.fixMiddle
+import org.hanuna.image.monochrome.getPages
 
 fun main(args: Array<String>) {
     val timer = Timer()
@@ -25,14 +26,19 @@ fun main(args: Array<String>) {
 fun runPNG(img: String){
     println("Start Image: $img.")
     val timer = Timer()
+    val dir = "book"
 
-    var image = readImageFile("img/png/book/${img}.png")
+    var image = readImageFile("$dir/${img}.png")
     timer.endPart("read image")
 
     image = image.fixMiddle()
-    timer.endPart("print Middle")
 
-    image.writeImageToPng("img/png/book/${img}_out.png")
+    image.writeImageToPng("$dir/${img}_gr.png")
+
+    val pages = image.getPages();
+
+    pages.first.writeImageToPng("$dir/${img}_p1.png")
+    pages.second.writeImageToPng("$dir/${img}_p2.png")
     timer.endPart("write to file")
 
     timer.all()

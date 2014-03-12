@@ -20,10 +20,14 @@ fun Image.writeImageToPng(filename: String) {
     ImageIO.write(toBufferedImage(), "PNG", File(filename));
 }
 
-fun Image.newEmptyImage(withAlphaChannel: Boolean = false): MutableImage {
+fun newEmptyImage(withAlphaChannel: Boolean = false, width: Int, height: Int): MutableImage {
     val imageType = if (withAlphaChannel) BufferedImage.TYPE_4BYTE_ABGR else BufferedImage.TYPE_3BYTE_BGR
     val bufferedImage = BufferedImage(width, height, imageType)
     return bufferedImage.toMutableImage()
+}
+
+fun Image.newEmptyImage(withAlphaChannel: Boolean = false): MutableImage {
+    return newEmptyImage(withAlphaChannel, width, height)
 }
 
 private fun writeJpeg(image : BufferedImage, destFile : String, quality : Float) {
