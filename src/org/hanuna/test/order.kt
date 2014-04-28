@@ -4,9 +4,9 @@ import java.io.File
 import java.nio.file.Files
 
 // count of pages/4
-val N = 10;
+val N = 6;
 
-val dir = "book/toPrint/1"
+val dir = "book/toPrint/10"
 
 val firstOut = "$dir/first"
 val secondOut = "$dir/second"
