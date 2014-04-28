@@ -2,6 +2,9 @@ package org.hanuna.image
 
 import java.awt.image.BufferedImage
 import java.awt.image.DataBufferByte
+import org.opencv.core.Mat
+import org.opencv.core.CvType
+import java.awt.image.Raster
 
 fun BufferedImage.toMutableImage(): MutableImage = PixelArrayAsImage(this)
 
@@ -73,6 +76,21 @@ class PixelArrayAsImage(val bufferedImage: BufferedImage): MutableImage {
         } else {
             row
         }
+    }
+
+    inner class MyMatImp : MyMat(height, width) {
+        {
+            if (hasAlphaChannel)
+                throw UnsupportedOperationException()
+            put(0, 0, pixels)
+        }
+        override fun flush() {
+            get(0, 0, pixels)
+        }
+    }
+
+    override fun toMat(): MyMat {
+        return MyMatImp()
     }
 
 }

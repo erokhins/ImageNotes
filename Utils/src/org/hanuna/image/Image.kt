@@ -1,6 +1,8 @@
 package org.hanuna.image
 
 import java.awt.image.BufferedImage
+import org.opencv.core.Mat
+import org.opencv.core.CvType
 
 
 // in real range of all fields is 0-255
@@ -20,10 +22,16 @@ trait Image {
     fun get(col: Int, row: Int): Pixel
 
     fun toBufferedImage(): BufferedImage
+
+    fun toMat() : MyMat
 }
 
 trait MutableImage : Image {
     fun set(col: Int, row: Int, value: Pixel)
+}
+
+abstract class MyMat(height: Int, width: Int) : Mat(height, width, CvType.CV_8UC3) {
+    abstract fun flush()
 }
 
 class PixelWithCoordinates(pixel: Pixel, val col: Int, val row: Int) : Pixel by pixel
