@@ -17,6 +17,7 @@ import org.hanuna.image.MutableImage
 import org.hanuna.image.monochrome.crop
 import org.hanuna.detect.calculateMask
 import org.hanuna.detect.covPix
+import org.hanuna.detect.FloatMask
 
 /**
  * @author erokhins
@@ -24,8 +25,8 @@ import org.hanuna.detect.covPix
 val o = System.loadLibrary(Core.NATIVE_LIBRARY_NAME)
 
 val path = "img_cv/"
-val WIDTH = 1000
-val HEIGHT = 1000
+val WIDTH = 2000
+val HEIGHT = 2000
 
 
 fun saveNoise(img: String, inPath: String, outPath: String) {
@@ -63,10 +64,8 @@ fun createNoiseGetter(range: IntRange, imgPath: String, noisePath: String):
     override val height: Int = HEIGHT
 }
 
-
-fun main(args: Array<String>) {
-    val getter = createNoiseGetter(0..5, "$path/ok", "$path/ok/noise")
-    val im = "00"
+fun writeOut(mask: FloatMask, im: String) {
+    println("Out image: $im")
 
     val image = loadCropImage("$path/test/${im}.jpg")
     val noise = loadCropImage("$path/test/${im}_noise.jpg")
@@ -74,9 +73,14 @@ fun main(args: Array<String>) {
         override val image: Image = image
         override val noise: NoiseImage = NoiseImage(noise)
     }
-
-    val mask = calculateMask(getter)
     val result = imWithNoise.covPix(mask)
     result.writeImageToJpg("$path/test/${im}_out.jpg")
+}
+
+fun main(args: Array<String>) {
+    val getter = createNoiseGetter(10..59, "$path/ok", "$path/ok/noise")
+    val mask = calculateMask(getter)
+    for (i in 0..29)
+        writeOut(mask, img(i))
 }
 

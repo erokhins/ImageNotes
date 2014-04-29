@@ -65,6 +65,7 @@ object StandardPixels {
     val RED = toPixel(255)
     val GREEN = toPixel(0, 255)
     val BLUE = toPixel(0, 0, 255)
+    val YELLOW = toPixel(r = 255, g = 255)
 }
 
 fun randByte(): Int = Math.round(Math.random() * 255).toInt();

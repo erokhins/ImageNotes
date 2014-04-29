@@ -70,18 +70,29 @@ fun Coordinates.plus(r: Int): Coordinates = Coordinates(col + r, row + r)
 
 fun ImageWithNoise.covPix(mask: FloatMask, channel: ImageChannel = ImageChannel.r): MutableImage {
     val out = image.newEmptyImage()
-    val R = 12
     val imageMask = image.asFloatMask(channel)
 
     val mainMask = imageMask * mask
     val noiseMask = noise.asFloatMask(channel)
+    val covEvaluator = CovEvaluator(mainMask, noiseMask, 10)
 
     mainMask.forAll {
-        val cov = mainMask.subMask(it - R, it + R + 1).calcCov(noiseMask.subMask(it - R, it + R + 1))
-        if (cov < 0.003f)
-            out[it] = StandardPixels.BLACK
-        else
-            out[it] = StandardPixels.WHITE
+        val cov = covEvaluator[it]
+        out[it] = cov.toPixel()
     }
     return out;
+}
+
+fun Float.toPixel(): Pixel {
+    val zn = Math.abs(this) * 25 * 255
+    if (zn > 255) {
+        if (this > 0)
+            return StandardPixels.BLUE
+        else
+            return StandardPixels.YELLOW
+    }
+    if (this > 0)
+        return toPixel(r = zn.toInt())
+    else
+        return toPixel(g = zn.toInt())
 }
