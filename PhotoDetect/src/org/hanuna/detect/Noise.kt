@@ -72,9 +72,9 @@ fun ImageWithNoise.covPix(mask: FloatMask, channel: ImageChannel = ImageChannel.
     val out = image.newEmptyImage()
     val imageMask = image.asFloatMask(channel)
 
-    val mainMask = imageMask * mask
+    val mainMask = mask * imageMask
     val noiseMask = noise.asFloatMask(channel)
-    val covEvaluator = CovEvaluator(mainMask, noiseMask, 10)
+    val covEvaluator = CovEvaluator(mainMask, noiseMask)
 
     mainMask.forAll {
         val cov = covEvaluator[it]
@@ -95,4 +95,11 @@ fun Float.toPixel(): Pixel {
         return toPixel(r = zn.toInt())
     else
         return toPixel(g = zn.toInt())
+}
+
+fun FloatMask.times(value: Float) = object: FloatMask {
+    override val cols: Int = this@times.cols
+    override val rows: Int = this@times.rows
+    override fun get(col: Int, row: Int): Float = this@times[col, row] * value
+
 }

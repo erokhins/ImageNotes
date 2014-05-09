@@ -18,6 +18,10 @@ import org.hanuna.image.monochrome.crop
 import org.hanuna.detect.calculateMask
 import org.hanuna.detect.covPix
 import org.hanuna.detect.FloatMask
+import org.hanuna.detect.MutableFloatMaskImpl
+import org.hanuna.detect.ImageChannel
+import org.hanuna.detect.add
+import org.hanuna.detect.times
 
 /**
  * @author erokhins
@@ -73,13 +77,20 @@ fun writeOut(mask: FloatMask, im: String) {
         override val image: Image = image
         override val noise: NoiseImage = NoiseImage(noise)
     }
-    val result = imWithNoise.covPix(mask)
+    val result = imWithNoise.covPix(mask, ImageChannel.middle)
     result.writeImageToJpg("$path/test/${im}_out.jpg")
 }
 
 fun main(args: Array<String>) {
     val getter = createNoiseGetter(10..59, "$path/ok", "$path/ok/noise")
-    val mask = calculateMask(getter)
+//    val mask = MutableFloatMaskImpl(WIDTH, HEIGHT)
+
+    val mask = calculateMask(getter, ImageChannel.middle)
+
+//    mask.add(calculateMask(getter, ImageChannel.r) * 0.3f)
+//    mask.add(calculateMask(getter, ImageChannel.g) * 0.6f)
+//    mask.add(calculateMask(getter, ImageChannel.b) * 0.1f)
+
     for (i in 0..29)
         writeOut(mask, img(i))
 }

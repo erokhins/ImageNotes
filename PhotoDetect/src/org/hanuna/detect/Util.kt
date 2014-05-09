@@ -39,6 +39,7 @@ enum class ImageChannel {
     r
     g
     b
+    middle
 }
 
 fun Image.asFloatMask(channel: ImageChannel = ImageChannel.r): FloatMask = object : FloatMask {
@@ -51,6 +52,10 @@ fun Image.asFloatMask(channel: ImageChannel = ImageChannel.r): FloatMask = objec
             ImageChannel.r -> this@asFloatMask[fCol, fRow].r.toFloat()
             ImageChannel.g -> this@asFloatMask[fCol, fRow].g.toFloat()
             ImageChannel.b -> this@asFloatMask[fCol, fRow].b.toFloat()
+            ImageChannel.middle -> {
+                val pixel = this@asFloatMask[fCol, fRow]
+                pixel.r * 0.3f + pixel.g * 0.6f + pixel.g * 0.1f
+            }
         }
     }
 }
