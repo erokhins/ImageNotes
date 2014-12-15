@@ -17,7 +17,7 @@ fun Image.toMonochrome(): MutableImage {
             action {  (col, row) ->
                 sum += original[col, row].sq()
             }
-            val bound1 = Math.round((sum / pixelsInBlock) * 0.9f)
+            val bound1 = Math.round((sum / pixelsInBlock) * 0.87f)
             val bound2 = Math.round((sum / pixelsInBlock) * 0.85f)
             action { (col, row) ->
                 empty[col, row] = if (original[col, row].sq() > bound1)

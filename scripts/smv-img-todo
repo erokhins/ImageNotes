@@ -1,0 +1,10 @@
+#!/bin/bash 
+function move {
+  echo mv $1 $2;
+}
+
+while read line; do
+    move $line;
+done < todo
+
+
